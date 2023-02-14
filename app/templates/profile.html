@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Profile{% endblock title %}
+{% block main-content %}
+    {% csrf_token %}
+    {% for fm in data %}
+        <!-- {{fm.label_tag}} {{fm}} <small class="text-danger">{{fm.errors|striptags}}</small> -->
+    {% endfor %}
+
+{% endblock main-content %}

@@ -7,18 +7,18 @@ from .forms import *
 # Create your views here.
 
 def home(request):
-    # data = Book.objects.all()
-    # context = {
-    #     'data' : data
-    # }
     return render(request,'home.html')
 
 def searchBook(request):
-    data = Book.objects.all()
+    data = Book.objects.filter(is_issued = False)
+    # print(data)
     context = {
         'data' : data
     }
-    return render(request,'searchBook.html',context)
+    return render(request,'viewBook.html',context)
+
+def issueBook(request):
+    return render(request, 'issueBook.html')
 
 def aboutUs(request):
     return render(request, 'aboutUs.html')
@@ -42,21 +42,12 @@ def register(request):
         return render(request, 'register.html',{'form':form})
 
 def login(request):
-    # form = LoginForm()
-    # if request.method == 'POST':
-    #     form = LoginForm(request.POST or None)
-    #     if form.is_valid():
-    #         print("hii")
-    #         uname = form.cleaned_data['username']
-    #         upass = form.cleaned_data['password']
-    #         try:
-    #             user = User.objects.get(username=uname)
-    #             if user.check_password(upass):
-    #                 messages.success(request, 'Logged in Successfully')
-    #                 return HttpResponseRedirect('home')
-    #         except:
-    #             messages.error(request, 'Invalid Username or Password')
-    #             return HttpResponseRedirect('login')
-    #     else:
-    #         return render(request,'login.html', {'form':form})
-    return render(request,'login.html', {'form':form})
+    return render(request,'login.html')
+
+def profile(request):
+    data = Visitor.objects.all()
+    context = {
+        'data' : data
+    }
+    # print(context)
+    return render(request, 'profile.html', context)
