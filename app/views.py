@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
@@ -19,8 +19,7 @@ def searchBook(request):
 
 def issueBook(request):
     if request.user.is_authenticated:
-        user = request.user
-        student = Visitor.objects.filter(user = user).get()
+        student = Visitor.objects.filter(user = request.user).get()
         data = Book.objects.filter(is_issued = False)  
 
         print(student)
@@ -29,14 +28,22 @@ def issueBook(request):
         }
 
         if 'book_issued' in request.POST:
-            print(student.get(number_of_books = 2))
             if student.number_of_books >= 2:
-                messages.error(request, 'You have already Issued 2 books!!')
+                messages.error(request, 'ERROR: You have already Issued 2 books!!')
                 return HttpResponseRedirect('issueBook')
 
             else:
-                messages.success(request, 'Book Issued Successfully')
-                return HttpResponseRedirect('issueBook')
+                if request.method == 'POST':
+                    bookName = request.POST.get('bookName')
+                    book = Book.objects.get(book_name = bookName)
+                    book.is_issued = True
+                    book.save()
+
+                    student.number_of_books+=1
+                    student.save()
+                    print(student.number_of_books)
+                    messages.success(request, 'Book Issued Successfully')
+                    return HttpResponseRedirect('issueBook')
 
         else:
             return render(request,'issuebook.html', context)
@@ -57,7 +64,7 @@ def register(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'User Successfully Registered')
-            return HttpResponseRedirect('profile')
+            return redirect('login')
         else:
             return render(request,'register.html', {'form':form})
     
@@ -78,7 +85,7 @@ def profile(request):
             profile.save()
 
             messages.success(request, 'User Profile Updated Successfully')
-            return HttpResponseRedirect('')
+            return redirect('home')
         else:
             return render(request,'profile.html', {'form':form})
     

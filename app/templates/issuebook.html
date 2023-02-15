@@ -7,7 +7,7 @@
       {% if messages %}
          {% for msg in messages %}
             <div class="txt">
-                <p {% if msg.tags %} class="alert alert-{{msg.tags}} mb-5" {% endif %} >{{msg}}</p>
+                <p class="{{msg.tags}}">{{msg}}</p>
             </div>
          {% endfor %}
       {% endif %} 
@@ -30,7 +30,12 @@
                 </div>
                 <form class="btn" method="POST">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-light bg-" name="book_issued">ISSUE BOOK</button>
+                    <input type="hidden" value="{{fm.book_name}}" name="bookName">
+                    <button type="submit" class="btn btn-light bg-" name="book_issued">
+                        <!-- <div name="{{fm.book_name}}"> -->
+                            ISSUE BOOK
+                        <!-- </div> -->
+                    </button>
                 </form>
             </div>
         </div>
