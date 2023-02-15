@@ -23,6 +23,8 @@ class Visitor(models.Model):
     full_name = models.CharField(max_length = 100)
     address = models.CharField(max_length = 100)
     number_of_books = models.IntegerField(default = 0,null = True)
+    name_of_institution = models.CharField(max_length = 100)
+    date_of_birth = models.DateField()
 
     def __str__(self):
         return self.full_name

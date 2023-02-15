@@ -1,0 +1,41 @@
+{% extends 'layout.html' %}
+{% load static %}
+
+{% block title %}Issue Book{% endblock title %}
+
+{% block main-content %} 
+      {% if messages %}
+         {% for msg in messages %}
+            <div class="txt">
+                <p {% if msg.tags %} class="alert alert-{{msg.tags}} mb-5" {% endif %} >{{msg}}</p>
+            </div>
+         {% endfor %}
+      {% endif %} 
+
+    {% for fm in data %}
+        <div class="container">
+        <div class="row">
+            <div class="col-sm-6">
+                <img src="{{fm.book_image.url}}" alt="Book Image" class="img-fluid">
+                </div>
+                <div class="col-sm-6">
+                <h3 class="heading">{{fm.book_name}}</h3>
+                <div class="underline">
+                    <hr>
+                </div>
+                <div class="book-details">
+                    <p class="book-detail">Author: {{fm.book_author}}</p>
+                    <p class="book-detail">Publisher: {{fm.book_publisher}}</p>
+                    <p class="book-detail">Price: {{fm.book_price}}</p>
+                </div>
+                <form class="btn" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-light bg-" name="book_issued">ISSUE BOOK</button>
+                </form>
+            </div>
+        </div>
+        </div>
+        <br>
+        <br>
+    {% endfor %}
+{% endblock main-content %}

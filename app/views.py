@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.contrib import messages
 from django.http import HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 from .models import *
 from .forms import *
 
@@ -11,14 +12,37 @@ def home(request):
 
 def searchBook(request):
     data = Book.objects.filter(is_issued = False)
-    # print(data)
     context = {
         'data' : data
     }
     return render(request,'viewBook.html',context)
 
 def issueBook(request):
-    return render(request, 'issueBook.html')
+    if request.user.is_authenticated:
+        user = request.user
+        student = Visitor.objects.filter(user = user).get()
+        data = Book.objects.filter(is_issued = False)  
+
+        print(student)
+        context = {
+            'data' : data
+        }
+
+        if 'book_issued' in request.POST:
+            print(student.get(number_of_books = 2))
+            if student.number_of_books >= 2:
+                messages.error(request, 'You have already Issued 2 books!!')
+                return HttpResponseRedirect('issueBook')
+
+            else:
+                messages.success(request, 'Book Issued Successfully')
+                return HttpResponseRedirect('issueBook')
+
+        else:
+            return render(request,'issuebook.html', context)
+    
+    else:
+        return HttpResponseRedirect('login')
 
 def aboutUs(request):
     return render(request, 'aboutUs.html')
@@ -33,7 +57,7 @@ def register(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'User Successfully Registered')
-            return HttpResponseRedirect('login')
+            return HttpResponseRedirect('profile')
         else:
             return render(request,'register.html', {'form':form})
     
@@ -45,9 +69,19 @@ def login(request):
     return render(request,'login.html')
 
 def profile(request):
-    data = Visitor.objects.all()
-    context = {
-        'data' : data
-    }
-    # print(context)
-    return render(request, 'profile.html', context)
+    if request.method == 'POST':
+        form = VisitorForm(request.POST)
+
+        if form.is_valid():
+            profile = form.save(commit=False)
+            profile.user = request.user
+            profile.save()
+
+            messages.success(request, 'User Profile Updated Successfully')
+            return HttpResponseRedirect('')
+        else:
+            return render(request,'profile.html', {'form':form})
+    
+    else:
+        form = VisitorForm
+        return render(request, 'profile.html',{'form':form})

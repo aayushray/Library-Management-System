@@ -81,7 +81,7 @@ DATABASES = {
     }
 }
 
-LOGIN_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = '/profile'
 
 
 # Password validation
