@@ -14,12 +14,8 @@ Open terminal using Ctrl + Alt + T. Run the following command <br>
 Create and activate virtual environment using <br>
 ```ruby
    mkvirtualenv venv
+   workon venv
 ```
-<br>
-
-```ruby
-    workon venv
-``` 
 <br>
 
 Install requirements needed for the project, from requirement.txt
@@ -48,6 +44,7 @@ Roll out migrations to the server
 ``` 
 <br>
 
+Run Local Server at port 127.0.0.1:8000
 ```ruby 
    python manage.py runserver
 ``` 
