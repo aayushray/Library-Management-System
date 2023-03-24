@@ -84,7 +84,6 @@ def profile(request):
             profile.user = request.user
             profile.save()
 
-            messages.success(request, 'User Profile Updated Successfully')
             return redirect('home')
         else:
             return render(request,'profile.html', {'form':form})
